@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; 
 import Input from './Input';
 import './App.css';
-import { signInWithGooglePopup, createUserDocFromAuth, signInAuthUserWithEmailAndPassword, signOutUser } from './firebase'; // Assuming you have a signOutUser function in your 'firebase' module
+import { signInWithGooglePopup, createUserDocFromAuth, signInAuthUserWithEmailAndPassword, signOutUser } from './firebase';
 
-const Login = (props) => {
+const Login = () => {
+  const navigate = useNavigate(); 
   const logGoogleUser = async () => {
     const { user } = await signInWithGooglePopup();
     const userDocRef = await createUserDocFromAuth(user);
+    navigate('/home');
   }
 
   const [contact, setContact] = useState({
@@ -32,6 +34,7 @@ const Login = (props) => {
     try {
       const response = await signInAuthUserWithEmailAndPassword(email, password);
       console.log(response);
+      navigate('/home');
     } catch (error) {
       console.log('error in LogIn', error.message);
     }
@@ -39,7 +42,8 @@ const Login = (props) => {
 
   const handleSignOut = async () => {
     try {
-      await signOutUser(); // Call your signOutUser function from 'firebase'
+      await signOutUser();
+      navigate('/login');
     } catch (error) {
       console.log('Error in Sign Out', error.message);
     }
